@@ -4,7 +4,7 @@ import styles from './App.module.css';
 
 function App() {
   const [value, setValue] = useState(0);
-  const [count, setCount] = useState([]);
+  const [greenStyle, setGreenStyle] = useState('');
 
   // Массив со всеми кнопками калькулятора
   const buttonsArray = Array(9)
@@ -38,28 +38,62 @@ function App() {
   );
 
   function handleClick(id, buttonValue) {
-    let input = document.querySelector('input');
-
     switch (id) {
       case 14:
         setValue(0);
-        input.classList.remove(`${styles.green}`);
+        setGreenStyle('');
         break;
       case 13:
-        let result = eval(value);
+        let result = calculate(value);
         setValue(result);
-        input.classList.add(`${styles.green}`);
+        setGreenStyle(styles.green);
         break;
       default:
         value === 0 ? setValue(buttonValue) : setValue(String(value) + buttonValue);
-        input.classList.remove(`${styles.green}`);
+        setGreenStyle('');
         break;
     }
   }
 
+  function calculate(value) {
+    // Читерский способ
+    // try {
+    //   return new Function('return (' + value + ')')();
+    // } catch (err) {
+    //   return '';
+    // }
+
+    let numbs = [];
+    let result = 0;
+
+    numbs = value.slice().split(/[+-]/);
+
+    for (let element of value) {
+      switch (element) {
+        case '+':
+          result = Number(numbs[0]) + Number(numbs[1]);
+          numbs[1] = result;
+          numbs.shift();
+          break;
+        case '-':
+          result = Number(numbs[0]) - Number(numbs[1]);
+          numbs[1] = result;
+          numbs.shift();
+          break;
+      }
+    }
+
+    return result;
+  }
+
   return (
     <>
-      <input type="text" className={styles.results} disabled value={value} />
+      <input
+        type="text"
+        className={`${styles.results} ${greenStyle}`}
+        disabled
+        value={value}
+      />
       <div className={styles.container}>
         {buttonsArray.map((element) => (
           <button
