@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-import sortUsers from '../components/SortUsers';
-import { RenderQualities } from '../components/RenderUsers';
-
-export const columns = {
-  name: {
-    path: '',
-    name: 'Имя',
-    sortOption: function (...states) {
-      sortUsers(...states, 'name');
-    },
-  },
-
-  age: {
-    path: '',
-    name: 'Возраст',
-    sortOption: function (...states) {
-      sortUsers(...states, 'age');
-    },
-  },
-
-  qualities: {
-    path: '',
-=======
 import { RenderQualities } from '../components/Qualities';
 
 export const columns = {
@@ -36,7 +12,6 @@ export const columns = {
   },
 
   qualities: {
->>>>>>> DynamicTable123
     name: 'Качества',
     component: (user) => {
       return RenderQualities(user);
@@ -44,21 +19,11 @@ export const columns = {
   },
 
   professions: {
-<<<<<<< HEAD
-    path: '',
-=======
     path: 'profession.name',
->>>>>>> DynamicTable123
     name: 'Профессия',
     component: (user) => {
       return <p>{user.profession.name}</p>;
     },
-<<<<<<< HEAD
-    sortOption: function (...states) {
-      sortUsers(...states, 'profession');
-    },
-=======
->>>>>>> DynamicTable123
   },
 
   delete: {
