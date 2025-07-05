@@ -21,8 +21,8 @@ function getErrorText(name, number) {
 
 function App() {
   const [formData, setFormData] = useState(initialState);
-  const [formError, setFormError] = useState('');
-  const ref = useRef(null);
+  const [formError, setFormError] = useState(' ');
+  const refPassword = useRef(null);
   const refSubmit = useRef(null);
 
   function handleChangeInput({ target }) {
@@ -31,7 +31,7 @@ function App() {
     const addErrorStyle = target.classList.add(styles.red);
 
     // Валидация инпутов
-    if (!/^[\w_@.]*$/.test(target.value)) {
+    if (!/^[\w_@.]*$/.test(target.value) && target.name === 'email') {
       setFormError(getErrorText(target.name, 0));
       addErrorStyle;
     } else if (target.value.length > 20) {
@@ -42,30 +42,37 @@ function App() {
       target.classList.remove(styles.red);
     }
 
+    // Наведение фокуса на submit при успешном заполнении формы
     if (
       !formError &&
       target.id === 'repeatPassword' &&
-      target.value === ref.current.value
+      target.value === refPassword.current.value
     ) {
       refSubmit.current.focus();
     }
   }
 
   function handleBlurInput({ target }) {
+    // Подсказка по минимальному количеству символов
     if (target.value.length < 4) {
       target.classList.add(styles.red);
       setFormError(getErrorText(target.name, 2));
     }
 
-    if (target.id === 'repeatPassword' && target.value !== ref.current.value) {
+    // Проверка на повтор пароля
+    if (target.id === 'repeatPassword' && target.value !== refPassword.current.value) {
       setFormError(getErrorText(target.name, 3));
     }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
+    console.log(formData);
     setFormData(initialState);
   }
+
+  // Проверка что все поля были заполнены
+  const isFillForms = Object.values(formData).every((element) => element);
 
   return (
     <>
@@ -87,10 +94,10 @@ function App() {
           name="пароль"
           type="new-password"
           value={formData.password}
-          placeholder="Пароль может содержать буквы, числа и нижнее подчёркивание."
+          placeholder="Пароль может содержать буквы, числа и спецсимволы."
           onChange={handleChangeInput}
           onBlur={handleBlurInput}
-          ref={ref}
+          ref={refPassword}
         />
         <label htmlFor="repeatPassword">Повторите пароль: </label>
         <input
@@ -105,7 +112,7 @@ function App() {
         <button
           type="submit"
           className={styles.submitButton}
-          disabled={formError}
+          disabled={formError || !isFillForms}
           ref={refSubmit}
         >
           Зарегистрироваться
