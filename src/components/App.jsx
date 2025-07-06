@@ -1,118 +1,101 @@
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styles from './App.module.css';
-
-const initialState = {
-  email: '',
-  password: '',
-  repeatPassword: '',
-};
-
-function getErrorText(name, number) {
-  const errorTexts = [
-    `Неверный ${name}. Допустимые символы - буквы, цифры и нижнее подчёркивание.`,
-    `Неверный ${name}. Должно быть не больше 20 символов`,
-    `Неверный ${name}. Должно быть не менее 4 символов`,
-    `Пароли не совпадают. Убедитесь что не допустили ошибку при повторном вводе`,
-  ];
-
-  return errorTexts[number];
-}
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 function App() {
-  const [formData, setFormData] = useState(initialState);
-  const [formError, setFormError] = useState(' ');
-  const refPassword = useRef(null);
-  const refSubmit = useRef(null);
+  let refSubmit = useRef(null);
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .trim()
+      .required('Обязательное поле')
+      .matches(/^[\w_@.]*$/, 'Допустимые символы - буквы, цифры и нижнее подчёркивание')
+      .max(30, 'Должно быть не больше 30 символов'),
+    password: yup
+      .string()
+      .trim()
+      .required('Обязательное поле')
+      .min(4, 'Должно быть не менее 4 символов')
+      .max(20, 'Должно быть не больше 20 символов'),
+    repeatPassword: yup
+      .string()
+      .trim()
+      .required('Обязательное поле')
+      .min(4, 'Должно быть не менее 4 символов')
+      .max(20, 'Должно быть не больше 20 символов')
+      .oneOf(
+        [yup.ref('password')],
+        'Пароли не совпадают. Убедитесь что не допустили ошибку при повторном вводе'
+      ),
+  });
 
-  function handleChangeInput({ target }) {
-    setFormData({ ...formData, [target.id]: target.value });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ defaultValues: [], mode: 'onBlur', resolver: yupResolver(schema) });
 
-    const addErrorStyle = target.classList.add(styles.red);
-
-    // Валидация инпутов
-    if (!/^[\w_@.]*$/.test(target.value) && target.name === 'email') {
-      setFormError(getErrorText(target.name, 0));
-      addErrorStyle;
-    } else if (target.value.length > 20) {
-      setFormError(getErrorText(target.name, 1));
-      addErrorStyle;
-    } else {
-      setFormError('');
-      target.classList.remove(styles.red);
-    }
-
-    // Наведение фокуса на submit при успешном заполнении формы
-    if (
-      !formError &&
-      target.id === 'repeatPassword' &&
-      target.value === refPassword.current.value
-    ) {
-      refSubmit.current.focus();
-    }
+  function submitForm(data) {
+    console.log({ data });
+    reset();
   }
 
-  function handleBlurInput({ target }) {
-    // Подсказка по минимальному количеству символов
-    if (target.value.length < 4) {
-      target.classList.add(styles.red);
-      setFormError(getErrorText(target.name, 2));
-    }
+  let getErrorText = () => {
+    let text = null;
+    Object.values(errors).some((element) => {
+      if (element?.message) {
+        text = element?.message;
+      }
+    });
 
-    // Проверка на повтор пароля
-    if (target.id === 'repeatPassword' && target.value !== refPassword.current.value) {
-      setFormError(getErrorText(target.name, 3));
-    }
+    return text;
+  };
+
+  function changeFocus({ target }) {
+    if (getErrorText && target.value.length >= 4) refSubmit.current.focus();
+    console.log(target.value);
   }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(formData);
-    setFormData(initialState);
-  }
-
-  // Проверка что все поля были заполнены
-  const isFillForms = Object.values(formData).every((element) => element);
 
   return (
     <>
       <h1 className={styles.header}>Создание аккаунта</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit(submitForm)}>
         <label htmlFor="email">Почта: </label>
         <input
           id="email"
           name="email"
           type="email"
-          value={formData.email}
           placeholder="example@mail.ru"
-          onChange={handleChangeInput}
-          onBlur={handleBlurInput}
+          className={errors.email?.message ? styles.red : null}
+          {...register('email')}
         />
         <label htmlFor="password">Пароль: </label>
         <input
           id="password"
           name="пароль"
           type="new-password"
-          value={formData.password}
           placeholder="Пароль может содержать буквы, числа и спецсимволы."
-          onChange={handleChangeInput}
-          onBlur={handleBlurInput}
-          ref={refPassword}
+          className={errors.password?.message ? styles.red : null}
+          {...register('password')}
         />
         <label htmlFor="repeatPassword">Повторите пароль: </label>
         <input
           id="repeatPassword"
           name="пароль"
           type="new-password"
-          value={formData.repeatPassword}
-          onChange={handleChangeInput}
-          onBlur={handleBlurInput}
+          className={errors.repeatPassword?.message ? styles.red : null}
+          {...register('repeatPassword')}
+          onInput={changeFocus}
         />
-        {formError && <p className={styles.infoInput}>{formError}</p>}
+        {<p className={styles.infoInput}>{getErrorText()}</p>}
+
         <button
           type="submit"
           className={styles.submitButton}
-          disabled={formError || !isFillForms}
+          disabled={getErrorText()}
           ref={refSubmit}
         >
           Зарегистрироваться
