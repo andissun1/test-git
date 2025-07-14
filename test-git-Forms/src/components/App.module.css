@@ -16,19 +16,17 @@
   background-color: rgba(255, 255, 255, 0.85);
 }
 
-.form input {
-  margin-bottom: 10px;
+.input {
+  margin-bottom: 6px;
   height: 1.5rem;
+  width: 100%;
   border: 1px solid white;
   border-bottom: 1px solid rgb(0, 0, 0);
   font-size: 14px;
   background-color: inherit;
 }
 
-.form input:first-of-type {
-  border-top-right-radius: 10px;
-}
-
+/* Кнопка */
 .submitButton {
   margin: 8px 0;
   border-radius: 10px;
@@ -50,12 +48,12 @@
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Ошибки */
 .red {
   background-color: rgba(255, 0, 0, 0.1) !important;
 }
 
 .infoInput {
-  margin-top: -5px;
   color: red;
   font-weight: bold;
 }

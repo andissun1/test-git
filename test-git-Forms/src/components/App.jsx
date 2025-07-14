@@ -1,119 +1,90 @@
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { TextField } from './TextField';
+import { validator } from './validator';
 import styles from './App.module.css';
 
-const initialState = {
-  email: '',
-  password: '',
-  repeatPassword: '',
-};
+export default function App() {
+  const [userData, setUserData] = useState({
+    email: '',
+    password: '',
+    repeatPassword: '',
+  });
 
-function getErrorText(name, number) {
-  const errorTexts = [
-    `Неверный ${name}. Допустимые символы - буквы, цифры и нижнее подчёркивание.`,
-    `Неверный ${name}. Должно быть не больше 20 символов`,
-    `Неверный ${name}. Должно быть не менее 4 символов`,
-    `Пароли не совпадают. Убедитесь что не допустили ошибку при повторном вводе`,
-  ];
+  const refSubmitButton = useRef(null);
+  const [error, setError] = useState({});
+  const isValid = Object.keys(error).length === 0;
 
-  return errorTexts[number];
-}
+  const userSchema = {
+    email: {
+      isRequired: { message: 'Обязательное поле' },
+      isEmail: { message: 'Некорректный email' },
+    },
+    password: {
+      isRequired: { message: 'Обязательное поле' },
+      min: { message: 'Минимум 6 символов', value: 6 },
+      max: { message: 'Максимум 10 символов', value: 10 },
+    },
+    repeatPassword: {
+      isRequired: { message: 'Обязательное поле' },
+      checkPassword: { message: 'Пароли не совпадают', ref: 'password' },
+    },
+  };
 
-function App() {
-  const [formData, setFormData] = useState(initialState);
-  const [formError, setFormError] = useState(' ');
-  const refPassword = useRef(null);
-  const refSubmit = useRef(null);
+  useEffect(() => {
+    const error = validator(userData, userSchema);
+    setError(error);
+  }, [userData]);
 
-  function handleChangeInput({ target }) {
-    setFormData({ ...formData, [target.id]: target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  };
 
-    const addErrorStyle = target.classList.add(styles.red);
-
-    // Валидация инпутов
-    if (!/^[\w_@.]*$/.test(target.value) && target.name === 'email') {
-      setFormError(getErrorText(target.name, 0));
-      addErrorStyle;
-    } else if (target.value.length > 20) {
-      setFormError(getErrorText(target.name, 1));
-      addErrorStyle;
-    } else {
-      setFormError('');
-      target.classList.remove(styles.red);
-    }
-
-    // Наведение фокуса на submit при успешном заполнении формы
-    if (
-      !formError &&
-      target.id === 'repeatPassword' &&
-      target.value === refPassword.current.value
-    ) {
-      refSubmit.current.focus();
-    }
-  }
-
-  function handleBlurInput({ target }) {
-    // Подсказка по минимальному количеству символов
-    if (target.value.length < 4) {
-      target.classList.add(styles.red);
-      setFormError(getErrorText(target.name, 2));
-    }
-
-    // Проверка на повтор пароля
-    if (target.id === 'repeatPassword' && target.value !== refPassword.current.value) {
-      setFormError(getErrorText(target.name, 3));
-    }
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(formData);
-    setFormData(initialState);
-  }
-
-  // Проверка что все поля были заполнены
-  const isFillForms = Object.values(formData).every((element) => element);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isValid) return;
+    console.log(userData);
+  };
 
   return (
     <>
       <h1 className={styles.header}>Создание аккаунта</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <label htmlFor="email">Почта: </label>
-        <input
-          id="email"
+        <TextField
           name="email"
           type="email"
-          value={formData.email}
+          label="Почта:"
           placeholder="example@mail.ru"
-          onChange={handleChangeInput}
-          onBlur={handleBlurInput}
+          value={userData.name}
+          onChange={handleChange}
+          error={error?.email}
         />
-        <label htmlFor="password">Пароль: </label>
-        <input
-          id="password"
-          name="пароль"
+
+        <TextField
+          name="password"
           type="new-password"
-          value={formData.password}
+          label="Пароль:"
           placeholder="Пароль может содержать буквы, числа и спецсимволы."
-          onChange={handleChangeInput}
-          onBlur={handleBlurInput}
-          ref={refPassword}
+          value={userData.password}
+          onChange={handleChange}
+          error={error?.password}
         />
-        <label htmlFor="repeatPassword">Повторите пароль: </label>
-        <input
-          id="repeatPassword"
-          name="пароль"
+
+        <TextField
+          name="repeatPassword"
           type="new-password"
-          value={formData.repeatPassword}
-          onChange={handleChangeInput}
-          onBlur={handleBlurInput}
+          label="Повторите пароль:"
+          value={userData.repeatPassword}
+          onChange={handleChange}
+          error={error?.repeatPassword}
         />
-        {formError && <p className={styles.infoInput}>{formError}</p>}
+
         <button
           type="submit"
+          disabled={!isValid}
           className={styles.submitButton}
-          disabled={formError || !isFillForms}
-          ref={refSubmit}
+          ref={refSubmitButton}
+          autoFocus
         >
           Зарегистрироваться
         </button>
@@ -121,5 +92,3 @@ function App() {
     </>
   );
 }
-
-export default App;
