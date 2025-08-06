@@ -1,4 +1,4 @@
-import { RenderQualities } from '../components/Qualities';
+import { RenderQualities } from '../components/Table/Qualities';
 
 export const columns = {
   name: {

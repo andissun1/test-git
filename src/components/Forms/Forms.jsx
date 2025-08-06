@@ -5,6 +5,8 @@ import { data } from '../../data';
 import { SelectField } from './SelectField';
 import { useEffect, useState } from 'react';
 import { validator } from '../utils/validator';
+import { useNavigate } from 'react-router-dom';
+import { AuthForm } from './AuthForm';
 
 export function Forms() {
   const [userData, setUserData] = useState({
@@ -18,6 +20,8 @@ export function Forms() {
   });
 
   const [error, setError] = useState({});
+  const [isHiddenForm, setIsHiddenForm] = useState(true);
+  const navigate = useNavigate();
 
   const userSchema = {
     name: {
@@ -79,12 +83,27 @@ export function Forms() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isValid) return;
-    console.log(userData);
+    console.log(userData); // Данные от пользователя
   };
+
+  // Временные функции для удобства
+  function routeToTable() {
+    navigate('/table');
+  }
+
+  function showForm() {
+    setIsHiddenForm(!isHiddenForm);
+  }
 
   return (
     <>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <span className={`${isHiddenForm ? styles.hideForm : ''}`}>
+        Форма добавления пользователя
+      </span>
+      <form
+        className={`${styles.form} ${isHiddenForm ? styles.hideForm : ''}`}
+        onSubmit={handleSubmit}
+      >
         <TextField
           name="name"
           type="text"
@@ -155,6 +174,14 @@ export function Forms() {
           Сохранить
         </button>
       </form>
+
+      <button className={styles.routeButton} onClick={routeToTable}>
+        К таблице
+      </button>
+
+      <button className={styles.showForm} onClick={showForm}>
+        Показать форму
+      </button>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import styles from '../components/components.module.css';
+import styles from './components.module.css';
 
 export function RenderQualities(user) {
   return (

@@ -1,0 +1,22 @@
+.navbar {
+  position: absolute;
+  display: flex;
+  justify-content: left;
+  top: 3px;
+  left: 0;
+  right: 0;
+
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+.navbar a {
+  display: inline-block;
+  text-align: center;
+  width: 20%;
+
+  padding: 5px;
+  box-sizing: border-box;
+
+  text-decoration: none;
+  color: black;
+}
