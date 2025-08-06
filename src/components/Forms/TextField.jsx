@@ -1,11 +1,11 @@
 import styles from './TextField.module.css';
 
-export const TextField = ({ name, label, error, ...props }) => {
+export const TextField = ({ name, label, error, value, ...props }) => {
   return (
     <div>
       <label htmlFor={name}>{label}</label>
       <input className={styles.input} name={name} {...props} />
-      {error && <span className={styles.infoInput}>{error}</span>}
+      {value && error && <span className={styles.infoInput}>{error}</span>}
     </div>
   );
 };

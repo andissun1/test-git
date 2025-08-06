@@ -5,8 +5,33 @@ import { data } from '../../data';
 import { SelectField } from './SelectField';
 import { useEffect, useState } from 'react';
 import { validator } from '../utils/validator';
-import { useNavigate } from 'react-router-dom';
-import { AuthForm } from './AuthForm';
+
+const userSchema = {
+  name: {
+    isRequired: { message: 'Обязательное поле' },
+    min: { message: 'Минимум 2 символа', value: 2 },
+    max: { message: 'Максимум 20 символов', value: 20 },
+  },
+  age: {
+    isRequired: { message: 'Обязательное поле' },
+    isNumber: { message: 'Должно быть более 18', value: 18 },
+  },
+  profession: {
+    isRequired: { message: 'Обязательное поле' },
+  },
+  email: {
+    isRequired: { message: 'Обязательное поле' },
+    isEmail: { message: 'Введите корректный email' },
+  },
+  password: {
+    isRequired: { message: 'Обязательное поле' },
+    min: { message: 'Минимум 6 символа', value: 6 },
+    max: { message: 'Максимум 10 символов', value: 10 },
+  },
+  repeatPassword: {
+    checkPassword: { message: 'Пароли не совпадают', ref: 'password' },
+  },
+};
 
 export function Forms() {
   const [userData, setUserData] = useState({
@@ -20,35 +45,6 @@ export function Forms() {
   });
 
   const [error, setError] = useState({});
-  const [isHiddenForm, setIsHiddenForm] = useState(true);
-  const navigate = useNavigate();
-
-  const userSchema = {
-    name: {
-      isRequired: { message: 'Обязательное поле' },
-      min: { message: 'Минимум 2 символа', value: 2 },
-      max: { message: 'Максимум 20 символов', value: 20 },
-    },
-    age: {
-      isRequired: { message: 'Обязательное поле' },
-      isNumber: { message: 'Должно быть более 18', value: 18 },
-    },
-    profession: {
-      isRequired: { message: 'Обязательное поле' },
-    },
-    email: {
-      isRequired: { message: 'Обязательное поле' },
-      isEmail: { message: 'Введите корректный email' },
-    },
-    password: {
-      isRequired: { message: 'Обязательное поле' },
-      min: { message: 'Минимум 6 символа', value: 6 },
-      max: { message: 'Максимум 10 символов', value: 10 },
-    },
-    repeatPassword: {
-      checkPassword: { message: 'Пароли не совпадают', ref: 'password' },
-    },
-  };
 
   const validate = () => {
     const error = validator(userData, userSchema);
@@ -83,27 +79,13 @@ export function Forms() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isValid) return;
-    console.log(userData); // Данные от пользователя
+    console.log(userData); // Данные для создания нового пользователя
   };
-
-  // Временные функции для удобства
-  function routeToTable() {
-    navigate('/table');
-  }
-
-  function showForm() {
-    setIsHiddenForm(!isHiddenForm);
-  }
 
   return (
     <>
-      <span className={`${isHiddenForm ? styles.hideForm : ''}`}>
-        Форма добавления пользователя
-      </span>
-      <form
-        className={`${styles.form} ${isHiddenForm ? styles.hideForm : ''}`}
-        onSubmit={handleSubmit}
-      >
+      <span>Форма добавления пользователя</span>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <TextField
           name="name"
           type="text"
@@ -154,7 +136,7 @@ export function Forms() {
           name="password"
           type="text"
           label="Пароль:"
-          placeholder="пароль"
+          placeholder="Пароль"
           value={userData.password}
           onChange={handleChange}
           error={error?.password}
@@ -164,7 +146,7 @@ export function Forms() {
           name="repeatPassword"
           type="text"
           label="Повторите пароль:"
-          placeholder="повтор пароля"
+          placeholder="Повтор пароля"
           value={userData.repeatPassword}
           onChange={handleChange}
           error={error?.repeatPassword}
@@ -174,14 +156,6 @@ export function Forms() {
           Сохранить
         </button>
       </form>
-
-      <button className={styles.routeButton} onClick={routeToTable}>
-        К таблице
-      </button>
-
-      <button className={styles.showForm} onClick={showForm}>
-        Показать форму
-      </button>
     </>
   );
 }

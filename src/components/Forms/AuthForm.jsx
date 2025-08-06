@@ -4,6 +4,23 @@ import { useState } from 'react';
 import { validator } from '../utils/validator';
 import { useEffect } from 'react';
 
+const userSchema = {
+  name: {
+    isRequired: { message: 'Обязательное поле' },
+    min: { message: 'Минимум 2 символа', value: 2 },
+    max: { message: 'Максимум 20 символов', value: 20 },
+  },
+  email: {
+    isRequired: { message: 'Обязательное поле' },
+    isEmail: { message: 'Введите корректный email' },
+  },
+  password: {
+    isRequired: { message: 'Обязательное поле' },
+    min: { message: 'Минимум 6 символа', value: 6 },
+    max: { message: 'Максимум 10 символов', value: 10 },
+  },
+};
+
 export const AuthForm = () => {
   const [userData, setUserData] = useState({
     name: '',
@@ -12,31 +29,14 @@ export const AuthForm = () => {
   });
   const [error, setError] = useState({});
 
-  useEffect(() => {
-    validate();
-  }, [userData]);
-
   const validate = () => {
     const error = validator(userData, userSchema);
     setError(error);
   };
 
-  const userSchema = {
-    name: {
-      isRequired: { message: 'Обязательное поле' },
-      min: { message: 'Минимум 2 символа', value: 2 },
-      max: { message: 'Максимум 20 символов', value: 20 },
-    },
-    email: {
-      isRequired: { message: 'Обязательное поле' },
-      isEmail: { message: 'Введите корректный email' },
-    },
-    password: {
-      isRequired: { message: 'Обязательное поле' },
-      min: { message: 'Минимум 6 символа', value: 6 },
-      max: { message: 'Максимум 10 символов', value: 10 },
-    },
-  };
+  useEffect(() => {
+    validate();
+  }, [userData]);
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -51,19 +51,15 @@ export const AuthForm = () => {
     registerAccount(userData); // Данные для регистрации передаются на API
   };
 
-  async function registerAccount(data) {
-    console.log(data);
-    let response = fetch('http://94.228.114.203:3004/api/auth/register', {
+  const registerAccount = (data) => {
+    fetch('http://94.228.114.203:3004/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    });
-
-    let result = await response;
-    console.log(result);
-  }
+    }).then((result) => console.log(result));
+  };
 
   return (
     <>
@@ -93,7 +89,7 @@ export const AuthForm = () => {
           name="password"
           type="text"
           label="Пароль:"
-          placeholder="пароль"
+          placeholder="Пароль"
           value={userData.password}
           onChange={handleChange}
           error={error?.password}

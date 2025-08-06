@@ -5,6 +5,23 @@ import { validator } from '../utils/validator';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const userSchema = {
+  name: {
+    isRequired: { message: 'Обязательное поле' },
+    min: { message: 'Минимум 2 символа', value: 2 },
+    max: { message: 'Максимум 20 символов', value: 20 },
+  },
+  email: {
+    isRequired: { message: 'Обязательное поле' },
+    isEmail: { message: 'Введите корректный email' },
+  },
+  password: {
+    isRequired: { message: 'Обязательное поле' },
+    min: { message: 'Минимум 6 символа', value: 6 },
+    max: { message: 'Максимум 10 символов', value: 10 },
+  },
+};
+
 export const Login = () => {
   const [userData, setUserData] = useState({
     email: '',
@@ -23,23 +40,6 @@ export const Login = () => {
     setError(error);
   };
 
-  const userSchema = {
-    name: {
-      isRequired: { message: 'Обязательное поле' },
-      min: { message: 'Минимум 2 символа', value: 2 },
-      max: { message: 'Максимум 20 символов', value: 20 },
-    },
-    email: {
-      isRequired: { message: 'Обязательное поле' },
-      isEmail: { message: 'Введите корректный email' },
-    },
-    password: {
-      isRequired: { message: 'Обязательное поле' },
-      min: { message: 'Минимум 6 символа', value: 6 },
-      max: { message: 'Максимум 10 символов', value: 10 },
-    },
-  };
-
   const handleChange = (e) => {
     const { value, name } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -54,7 +54,6 @@ export const Login = () => {
   };
 
   async function loginAccount(data) {
-    console.log(data);
     let response = await fetch('http://94.228.114.203:3004/api/auth/login', {
       method: 'POST',
       headers: {
@@ -68,7 +67,7 @@ export const Login = () => {
 
   return (
     <>
-      <span>Форма регистрации</span>
+      <span>Форма авторизации</span>
       <form className={styles.form} onSubmit={handleSubmit}>
         <TextField
           name="email"
