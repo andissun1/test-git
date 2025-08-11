@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AppLayout from './AppLayout';
+import { store } from './store';
 
 const WIN_PATTERNS = [
   [0, 1, 2],
@@ -13,10 +14,8 @@ const WIN_PATTERNS = [
 ];
 
 export default function App() {
-  const [buttons, setButtons] = useState(new Array(9).fill(null));
-  const [currentPlayer, setСurrentPlayer] = useState('X');
-  const [isGameEnded, setIsGameEnded] = useState(false);
-  const [isDraw, setIsDraw] = useState(false);
+  const { buttons, currentPlayer, isGameEnded, isDraw } = store.getState();
+  const [render, setRender] = useState(true);
 
   function handleClickButton(index) {
     if (buttons[index] || isGameEnded) {
@@ -25,15 +24,20 @@ export default function App() {
 
     let newButtons = buttons.slice();
     newButtons[index] = currentPlayer;
-    setButtons(newButtons);
+    store.dispatch({ type: 'SET_BUTTONS', payload: newButtons });
 
     if (checkWin(newButtons, currentPlayer)) {
-      setIsGameEnded(true);
+      store.dispatch({ type: 'SET_IS_GAME_ENDED', payload: true });
     } else if (newButtons.every((button) => button)) {
-      setIsDraw(true);
+      store.dispatch({ type: 'SET_IS_DRAW', payload: true });
     } else {
-      setСurrentPlayer((prevPlayer) => (prevPlayer === 'X' ? 'O' : 'X'));
+      store.dispatch({
+        type: 'SET_CURRENT_PLAYER',
+        payload: currentPlayer === 'X' ? 'O' : 'X',
+      });
     }
+
+    setRender((prev) => !prev);
   }
 
   function checkWin(newButtons, currentPlayer) {
@@ -49,10 +53,8 @@ export default function App() {
   };
 
   function resetGame() {
-    setButtons(new Array(9).fill(null));
-    setСurrentPlayer('X');
-    setIsGameEnded(false);
-    setIsDraw(false);
+    store.dispatch({ type: 'RESET_GAME' });
+    setRender((prev) => !prev);
   }
 
   return (
