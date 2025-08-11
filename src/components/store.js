@@ -1,3 +1,5 @@
+import { legacy_createStore as createStore } from 'redux';
+
 const initialState = {
   buttons: new Array(9).fill(null),
   currentPlayer: 'X',
@@ -34,17 +36,15 @@ const appReducer = (state = initialState, action) => {
   }
 };
 
-const createStore = (reducer) => {
-  let state;
+// const createStore = (reducer) => {
+//   let state;
 
-  return {
-    dispatch: (action) => {
-      state = reducer(state, action);
-    },
-    getState: () => state,
-  };
-};
+//   return {
+//     dispatch: (action) => {
+//       state = reducer(state, action);
+//     },
+//     getState: () => state,
+//   };
+// };
 
 export const store = createStore(appReducer);
-
-store.dispatch({});

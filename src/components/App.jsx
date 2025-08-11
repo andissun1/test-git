@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppLayout from './AppLayout';
 import { store } from './store';
 
@@ -16,6 +16,12 @@ const WIN_PATTERNS = [
 export default function App() {
   const { buttons, currentPlayer, isGameEnded, isDraw } = store.getState();
   const [render, setRender] = useState(true);
+
+  useEffect(() => {
+    return store.subscribe(() => {
+      setRender(!render);
+    });
+  });
 
   function handleClickButton(index) {
     if (buttons[index] || isGameEnded) {
@@ -36,8 +42,6 @@ export default function App() {
         payload: currentPlayer === 'X' ? 'O' : 'X',
       });
     }
-
-    setRender((prev) => !prev);
   }
 
   function checkWin(newButtons, currentPlayer) {
@@ -54,7 +58,6 @@ export default function App() {
 
   function resetGame() {
     store.dispatch({ type: 'RESET_GAME' });
-    setRender((prev) => !prev);
   }
 
   return (
