@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { validator } from '../utils/validator';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Provider/AuthProvider';
 
 const userSchema = {
   name: {
@@ -30,6 +31,7 @@ export const Login = () => {
 
   const [error, setError] = useState({});
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     validate();
@@ -47,23 +49,16 @@ export const Login = () => {
 
   const isValid = Object.keys(error).length === 0;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValid) return;
-    loginAccount(userData); // Данные для регистрации передаются на API
+    try {
+      const data = await login(userData);
+      if (data) navigate('/table');
+    } catch (error) {
+      console.log('Ошибка при входе');
+    }
   };
-
-  async function loginAccount(data) {
-    let response = await fetch('http://94.228.114.203:3004/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (response.ok) navigate('/table');
-  }
 
   return (
     <>

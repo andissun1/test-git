@@ -5,6 +5,7 @@ import { data } from '../../data';
 import { SelectField } from './SelectField';
 import { useEffect, useState } from 'react';
 import { validator } from '../utils/validator';
+import { http } from '../../http';
 
 const userSchema = {
   name: {
@@ -33,7 +34,8 @@ const userSchema = {
   },
 };
 
-export function Forms() {
+// Форма добавления пользователя
+export function CreateUserForm() {
   const [userData, setUserData] = useState({
     name: '',
     age: '',
@@ -76,15 +78,28 @@ export function Forms() {
     setUserData({ ...userData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const prepareUserFormData = () => {
+    const result = { ...userData };
+    delete result.repeatPassword;
+    result.age = Number(result.age);
+    result.qualities = [...result.qualities.map((qualData) => qualData.value)];
+
+    return result;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValid) return;
-    console.log(userData); // Данные для создания нового пользователя
+
+    const registerData = prepareUserFormData();
+    console.log('Отправленные данные', registerData);
+
+    const response = await http.post('users', registerData);
+    console.log('Ответ от сервера', response);
   };
 
   return (
     <>
-      <span>Форма добавления пользователя</span>
       <form className={styles.form} onSubmit={handleSubmit}>
         <TextField
           name="name"

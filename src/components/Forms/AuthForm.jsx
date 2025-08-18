@@ -3,6 +3,7 @@ import { TextField } from './TextField';
 import { useState } from 'react';
 import { validator } from '../utils/validator';
 import { useEffect } from 'react';
+import { useAuth } from '../../Provider/AuthProvider';
 
 const userSchema = {
   name: {
@@ -28,6 +29,7 @@ export const AuthForm = () => {
     password: '',
   });
   const [error, setError] = useState({});
+  const { register } = useAuth();
 
   const validate = () => {
     const error = validator(userData, userSchema);
@@ -48,17 +50,7 @@ export const AuthForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isValid) return;
-    registerAccount(userData); // Данные для регистрации передаются на API
-  };
-
-  const registerAccount = (data) => {
-    fetch('http://94.228.114.203:3004/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then((result) => console.log(result));
+    register(userData);
   };
 
   return (

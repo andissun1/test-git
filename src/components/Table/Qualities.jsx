@@ -1,9 +1,9 @@
 import styles from './components.module.css';
 
-export function RenderQualities(user) {
+export function RenderQualities({ qualities }) {
   return (
     <>
-      {user.qualities.map((quality) => (
+      {qualities.map((quality) => (
         <span key={quality._id} className={`${styles.quality} ${styles[quality.color]}`}>
           {quality.name}
         </span>

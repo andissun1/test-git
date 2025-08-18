@@ -19,7 +19,7 @@ export function setArrowOnSort(target, sortBy) {
 }
 
 export function getSortedUsers(data, sortBy) {
-  const sortUsers = data.users.slice().sort((a, b) => {
+  const sortUsers = data.slice().sort((a, b) => {
     const aValue = getValueByPath(a, sortBy.path);
     const bValue = getValueByPath(b, sortBy.path);
 

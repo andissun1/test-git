@@ -1,20 +1,30 @@
 import { RenderQualities } from '../components/Table/Qualities';
+import { useProfessions } from '../Provider/ProfessionProvider';
+import { useQualities } from '../Provider/QualitiesProvider';
+import { Link } from 'react-router-dom';
 
 export const columns = {
   name: {
     path: 'name',
     name: 'Имя',
+    component: (item) => {
+      return <Link to={`/users/${item._id}`}>{item.name}</Link>;
+    },
   },
 
-  age: {
-    path: 'age',
-    name: 'Возраст',
+  rate: {
+    path: 'rate',
+    name: 'Рейтинг',
+    component: (item) => {
+      return <span>{item.rate}</span>;
+    },
   },
 
   qualities: {
     name: 'Качества',
     component: (user) => {
-      return RenderQualities(user);
+      const { getQualitiesById } = useQualities();
+      return <RenderQualities qualities={getQualitiesById(user.qualities)} />;
     },
   },
 
@@ -22,7 +32,8 @@ export const columns = {
     path: 'profession.name',
     name: 'Профессия',
     component: (user) => {
-      return <p>{user.profession.name}</p>;
+      const { getProfessionsById } = useProfessions();
+      return <p>{getProfessionsById(user?.profession)}</p>;
     },
   },
 
