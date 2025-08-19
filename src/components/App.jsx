@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import AppLayout from './AppLayout';
 import { store } from './store';
 import { actions as userActions } from './store';
+import { useSelector, useDispatch } from 'react-redux';
 
 const WIN_PATTERNS = [
   [0, 1, 2],
@@ -18,8 +19,10 @@ const { setCurrentPlayer, setIsGameEnded, setIsDraw, setButtons, resetGame } =
   userActions;
 
 export default function App() {
+  // const { buttons, currentPlayer, isGameEnded, isDraw } = useSelector((state) => state); // Предупреждения приходят о возможных ненужных ререндерах
   const { buttons, currentPlayer, isGameEnded, isDraw } = store.getState();
   const [render, setRender] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     return store.subscribe(() => {
@@ -34,14 +37,14 @@ export default function App() {
 
     let newButtons = buttons.slice();
     newButtons[index] = currentPlayer;
-    store.dispatch(setButtons(newButtons));
+    dispatch(setButtons(newButtons));
 
     if (checkWin(newButtons, currentPlayer)) {
-      store.dispatch(setIsGameEnded(true));
+      dispatch(setIsGameEnded(true));
     } else if (newButtons.every((button) => button)) {
-      store.dispatch(setIsDraw(true));
+      dispatch(setIsDraw(true));
     } else {
-      store.dispatch(setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X'));
+      dispatch(setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X'));
     }
   }
 
@@ -58,7 +61,7 @@ export default function App() {
   };
 
   function restart() {
-    store.dispatch(resetGame());
+    dispatch(resetGame());
   }
 
   return (
