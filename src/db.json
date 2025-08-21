@@ -14,12 +14,7 @@
       "title": "*Дополнительно. Реализовать продвинутый поиск с помощью debounce()",
       "body": "",
       "id": 3,
-      "completed": false
-    },
-    {
-      "title": "1231",
-      "id": 4,
-      "completed": false
+      "completed": true
     }
   ]
 }

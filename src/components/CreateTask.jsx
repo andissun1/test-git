@@ -1,14 +1,15 @@
-import { useState } from 'react';
 import { SortButtons } from './SortButtons';
+import { toggleIsOpenFilters } from '../data/secondReducer';
 
 export function CreateTask({
   createTask,
   sortByAlphabet,
   sortById,
-  sortOnServer,
-  filters,
+  useDispatch,
+  useSelector,
 }) {
-  const [isOpenFilters, setIsOpenFilters] = useState(false);
+  const isOpenFilters = useSelector((state) => state.helperState.isOpenFilters);
+  const dispatch = useDispatch();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ export function CreateTask({
   };
 
   function openFilters() {
-    setIsOpenFilters((prevstate) => !prevstate);
+    dispatch(toggleIsOpenFilters());
   }
 
   return (
@@ -32,8 +33,8 @@ export function CreateTask({
           sortById={sortById}
           sortByAlphabet={sortByAlphabet}
           openFilters={openFilters}
-          sortOnServer={sortOnServer}
-          filters={filters}
+          useDispatch={useDispatch}
+          useSelector={useSelector}
         />
       ) : (
         <>

@@ -1,25 +1,41 @@
+import { setEditorData } from '../data/secondReducer';
 import styles from './TaskItem.module.css';
-import { useState } from 'react';
 
-export function Editor({ id, title, handleEdit, updateTask, completed }) {
-  const [data, setData] = useState({ title, completed });
+export function Editor({
+  id,
+  title,
+  handleEdit,
+  updateTask,
+  completed,
+  useDispatch,
+  useSelector,
+}) {
+  let data = useSelector((state) => state.helperState.editorData[id]);
+  const dispatch = useDispatch();
+
+  if (!data) {
+    data = { id, title, completed };
+  }
 
   const onSave = (id) => {
-    updateTask(id, data).finally(() => handleEdit());
+    updateTask(id, data);
+    handleEdit();
   };
 
   const onChange = (e) => {
     const { name, value } = e.target;
 
-    setData({
-      ...data,
-      [name]: value,
-      completed: data.completed,
-    });
+    dispatch(
+      setEditorData(id, {
+        ...data,
+        [name]: value,
+        completed: data.completed,
+      })
+    );
   };
 
   function handleCompleted() {
-    setData({ ...data, completed: !data.completed });
+    dispatch(setEditorData(id, { ...data, completed: !data.completed }));
   }
 
   function handleOnKeyDown(event) {

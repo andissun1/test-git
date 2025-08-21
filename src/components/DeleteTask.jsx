@@ -1,13 +1,22 @@
-import { useState } from 'react';
+import { toggleIsDeleting } from '../data/secondReducer';
 import styles from './TaskItem.module.css';
 
-export function TaskWithDeleteOption({ id, title, handleEdit, deleteTask, completed }) {
-  const [isDeleting, setIsDeleting] = useState(false);
+export function TaskWithDeleteOption({
+  id,
+  title,
+  handleEdit,
+  deleteTask,
+  completed,
+  useDispatch,
+  useSelector,
+}) {
+  const isDeleting = useSelector((state) => state.helperState.isDeleting[id]);
+  const dispatch = useDispatch();
 
   async function onDelete(id) {
-    setIsDeleting(true);
+    dispatch(toggleIsDeleting(id));
     await deleteTask(id);
-    setIsDeleting(false);
+    dispatch(toggleIsDeleting(id));
   }
 
   return (

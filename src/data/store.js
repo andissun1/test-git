@@ -1,14 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { reducer as taskSliceReducer } from './updateTaskSlice';
-import { reducer as secondSliceReducer } from './secondSlice';
+import { applyMiddleware, combineReducers, legacy_createStore } from '@reduxjs/toolkit';
+import { firstReducer } from './firstReducer';
+import { secondReducer } from './secondReducer';
+import { thunk } from 'redux-thunk';
 
-export const store = configureStore({
-  reducer: { taskSliceReducer, secondSliceReducer },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: true,
-      immutableCheck: true,
-      serializableCheck: true,
-      actionCreatorCheck: true,
-    }),
+const rootReducer = combineReducers({
+  todoState: firstReducer,
+  helperState: secondReducer,
 });
+
+export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));

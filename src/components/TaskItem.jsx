@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
 import { TaskWithDeleteOption } from './DeleteTask';
 import { Editor } from './Editor';
+import { toggleIsEdit } from '../data/secondReducer';
 
-export function TaskItem({ id, title, deleteTask, updateTask, completed }) {
-  const [isEdit, setIsEdit] = useState(false);
+export function TaskItem({
+  id,
+  title,
+  deleteTask,
+  updateTask,
+  completed,
+  useDispatch,
+  useSelector,
+}) {
+  const isEdit = useSelector((state) => state.helperState.isEdit[id]);
+  const dispatch = useDispatch();
 
-  const handleEdit = () => setIsEdit((prevState) => !prevState);
+  const handleEdit = () => dispatch(toggleIsEdit(id));
 
   return (
     <>
@@ -16,6 +25,8 @@ export function TaskItem({ id, title, deleteTask, updateTask, completed }) {
           title={title}
           handleEdit={handleEdit}
           completed={completed}
+          useDispatch={useDispatch}
+          useSelector={useSelector}
         />
       ) : (
         <TaskWithDeleteOption
@@ -24,6 +35,8 @@ export function TaskItem({ id, title, deleteTask, updateTask, completed }) {
           handleEdit={handleEdit}
           title={title}
           deleteTask={deleteTask}
+          useDispatch={useDispatch}
+          useSelector={useSelector}
         />
       )}
     </>
