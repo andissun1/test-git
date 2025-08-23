@@ -1,0 +1,117 @@
+/* Всё для стилизации уведомлений */
+.toastContainer {
+  position: fixed;
+  width: 300px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+
+  padding: 20px;
+  height: max-content;
+}
+
+.hide {
+  display: none;
+}
+
+.default {
+  background-color: white;
+  visibility: hidden;
+
+  border-radius: 14px;
+  border: 1px solid gray;
+  box-shadow: 0 0 20px 5px white;
+
+  width: 300px;
+
+  animation: Toast 4s linear 0s forwards;
+}
+
+.error {
+  background-color: rgba(255, 0, 0, 0.506);
+  visibility: hidden;
+
+  border-radius: 14px;
+  border: 1px solid gray;
+  box-shadow: 0 0 20px 5px white;
+
+  width: 300px;
+
+  animation: Toast 4s linear 0s forwards;
+}
+
+.success {
+  background-color: rgba(0, 158, 0, 0.464);
+  visibility: hidden;
+
+  border-radius: 14px;
+  border: 1px solid gray;
+  box-shadow: 0 0 20px 5px white;
+
+  width: 300px;
+
+  animation: Toast 4s linear 0s forwards;
+}
+
+.left-top {
+  left: 0;
+  top: 0;
+}
+
+.right-top {
+  right: 0;
+  top: 0;
+}
+
+.right-bottom {
+  right: 0;
+  bottom: 0;
+}
+
+.left-bottom {
+  left: 0;
+  bottom: 0;
+  top: '';
+  right: '';
+}
+
+@keyframes Toast {
+  from {
+    visibility: visible;
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+/* Кнопки для тестирования */
+.buttons {
+  position: absolute;
+  display: grid;
+  column-gap: 5px;
+  row-gap: 5px;
+
+  right: 10px;
+  bottom: 10px;
+}
+
+.buttons > button {
+  border: 1px solid wheat;
+}
+
+.buttons > button:first-child {
+  grid-column: span 3;
+}
+
+.buttons > button:last-child {
+  grid-column: span 3;
+}

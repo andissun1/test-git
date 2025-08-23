@@ -5,13 +5,9 @@ import { validator } from '../utils/validator';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Provider/AuthProvider';
+import { Toast } from '../../components/Notifications/Toast';
 
 const userSchema = {
-  name: {
-    isRequired: { message: 'Обязательное поле' },
-    min: { message: 'Минимум 2 символа', value: 2 },
-    max: { message: 'Максимум 20 символов', value: 20 },
-  },
   email: {
     isRequired: { message: 'Обязательное поле' },
     isEmail: { message: 'Введите корректный email' },

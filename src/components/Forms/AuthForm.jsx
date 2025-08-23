@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { validator } from '../utils/validator';
 import { useEffect } from 'react';
 import { useAuth } from '../../Provider/AuthProvider';
+import { Toast } from '../Notifications/Toast';
 
 const userSchema = {
   name: {
@@ -55,6 +56,8 @@ export const AuthForm = () => {
 
   return (
     <>
+      <Toast position="right-top" text={'Мяу'} time={10} />
+
       <span>Форма регистрации</span>
       <form className={styles.form} onSubmit={handleSubmit}>
         <TextField
