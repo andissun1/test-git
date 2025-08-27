@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './App.css';
 import styles from './App.module.css';
 
 function App() {
@@ -18,6 +17,7 @@ function App() {
     {
       id: 10,
       value: '+',
+      type: 'operator',
     },
     {
       id: 11,
@@ -26,14 +26,27 @@ function App() {
     {
       id: 12,
       value: '-',
+      type: 'operator',
     },
     {
       id: 13,
       value: '=',
+      type: 'operator',
     },
     {
       id: 14,
       value: 'C',
+      type: 'operator',
+    },
+    {
+      id: 15,
+      value: '*',
+      type: 'operator',
+    },
+    {
+      id: 16,
+      value: '/',
+      type: 'operator',
     }
   );
 
@@ -66,7 +79,7 @@ function App() {
     let numbs = [];
     let result = 0;
 
-    numbs = value.slice().split(/[+-]/);
+    numbs = value.slice().split(/[\+\-\*\/]/);
 
     for (let element of value) {
       switch (element) {
@@ -77,6 +90,16 @@ function App() {
           break;
         case '-':
           result = Number(numbs[0]) - Number(numbs[1]);
+          numbs[1] = result;
+          numbs.shift();
+          break;
+        case '*':
+          result = Number(numbs[0]) * Number(numbs[1]);
+          numbs[1] = result;
+          numbs.shift();
+          break;
+        case '/':
+          result = Number(numbs[0]) / Number(numbs[1]);
           numbs[1] = result;
           numbs.shift();
           break;
@@ -97,7 +120,9 @@ function App() {
       <div className={styles.container}>
         {buttonsArray.map((element) => (
           <button
+            className={element.type === 'operator' ? styles.operator : ''}
             key={element.id}
+            value={element.value}
             onClick={() => {
               handleClick(element.id, element.value);
             }}
