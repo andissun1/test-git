@@ -1,0 +1,64 @@
+.widget {
+  border-radius: 10px;
+  width: 400px;
+  padding: 20px;
+  box-shadow: 0 5px 10px 2px rgba(34, 60, 80, 0.2);
+  background-color: white;
+
+  &-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  &-image {
+    display: block;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  &-info {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 20px 0;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+    }
+  }
+
+  &-description {
+    // margin-top: 10px;
+    font-weight: 700;
+    text-align: center;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &-submit {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    background-color: inherit;
+    font-weight: 700;
+    font-size: 18px;
+    border: 2px solid #282880;
+    cursor: pointer;
+    transition: transform 0.3s;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
