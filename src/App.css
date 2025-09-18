@@ -1,0 +1,39 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.startButton {
+  margin-top: 5vh;
+}
+
+.Board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.Square {
+  width: 6vh;
+  height: 6vh;
+  background-color: #1b1b1b;
+  border: 1px solid rgb(58, 58, 58);
+  border-radius: 1vh;
+  margin: 0.5vh;
+}
+
+.Square button {
+  width: 100%;
+  height: 100%;
+}
+
+.Square .snake {
+  background-color: #3eff37;
+  border-color: #3eff37;
+}
+
+.Square .apple {
+  background-color: #ff3939;
+  border-color: #ff3939;
+}
